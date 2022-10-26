@@ -1,0 +1,16 @@
+@AbapCatalog.sqlViewName: 'ZCHR11'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'CHR10 for ODATA'
+@OData.publish: true
+define view ZCDSCHR11
+    with parameters i_charg : charg_d
+as select from ZCDSCHR10 {
+    key charg,
+    werks,
+    matnr,
+    lgort,
+    clabs    
+}    where ZCDS_CHR10.charg = $parameters.i_charg 
+       and ZCDS_CHR10.lgort = '1017'

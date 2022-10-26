@@ -1,0 +1,38 @@
+string linkUrl = "http://xxx.com:1081/sap/opu/odata/sap/ZCDS_CHR11_CDS/ZCDS_CHR11(i_charg='"  + part + "')/Set";
+                    Uri requestUri = null;
+                    Uri.TryCreate((linkUrl), UriKind.Absolute, out requestUri);
+
+                    NetworkCredential nc = new NetworkCredential("USER", "PASSWORD");
+                    CredentialCache cache = new CredentialCache();
+                    cache.Add(requestUri, "Basic", nc);
+                    cache.Add(new Uri(linkUrl), "NTLM", new NetworkCredential("", ""));
+
+                    // Requesting query string
+                    HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(requestUri);
+                    request.Credentials = cache;
+
+                    // Getting response from WebRequest
+                    request.Method = WebRequestMethods.Http.Get;
+                    HttpWebResponse response1 = (HttpWebResponse)request.GetResponse();
+                    StreamReader respStream = new StreamReader(response1.GetResponseStream());
+
+                    string responsestr = "";//= respStream.ReadToEnd();
+                    while (respStream.Peek() >= 0)
+                    {
+                        responsestr += respStream.ReadLine();
+                    }
+                    try
+                    {
+                        var xmldoc = new XmlDocument();
+                        xmldoc.LoadXml(responsestr);
+                        XmlNodeReader xmlReader = new XmlNodeReader(xmldoc);
+                        DataSet dt = new DataSet();
+                        dt.ReadXml(xmlReader);
+
+                        maktx = dt.Tables[7].Rows[0].ItemArray[13].ToString();
+                        ...        
+                    }
+                    catch (Exception EX)
+                    {
+                        Error_Log(part + "is not got from SAP exception is: " + EX.Message);
+                    }

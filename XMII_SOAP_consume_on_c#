@@ -1,0 +1,19 @@
+
+XMIIWS.Rowset response=null;
+XMIIWS.XacuteWS xacuteWS = new XMIIWS.XacuteWS();
+xacuteWS.Credentials = new NetworkCredential("wsuser", "password");
+XMIIWS.InputParams prms = new XMIIWS.InputParams();
+
+prms.v1 = this.v1.ToString();
+prms.v2 = this.v2.Trim().ToInteger().ToString();
+...
+
+response = xacuteWS.Xacute("wsuser", "Ank123456", prms);
+if (response.Row[0].status == "FAILED") 
+{
+    Error_Log(prms.v1 + response.Row[0].outputXML);
+}
+else
+{
+  
+}
